@@ -10,19 +10,20 @@ print(port)
 @app.route('/', methods=['POST'])
 def index():
   print(port)
-  data = json.loads(request.get_data().decode('utf-8'))
+  data = json.loads(request.get_data())
 
   # FETCH THE CRYPTO NAME
   crypto_name = data['conversation']['memory']['crypto']['value']
 
   # FETCH BTC/USD/EUR PRICES
   r = requests.get("https://min-api.cryptocompare.com/data/price?fsym="+crypto_name+"&tsyms=BTC,USD,EUR")
-
+  print(data)
+  print(r.json())
   return jsonify(
     status=200,
     replies=[{
       'type': 'text',
-      'content': 'The price of {0} is \n%f USD or \n%f EUR.'.format(crypto_name, r.json()['USD'], r.json()['EUR'])
+      'content': 'The price of {0} is {1} USD or {2} EUR.'.format(crypto_name, r.json()['USD'], r.json()['EUR'])
     }]
   )
 
